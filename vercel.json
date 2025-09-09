@@ -2,19 +2,19 @@
   "rewrites": [
     {
       "source": "/client-form.html",
-      "destination": "/client/client-form.html"
+      "destination": "/public/clientForm.html"
     },
     {
       "source": "/admin-dashboard.html",
-      "destination": "/admin/admin-dashboard.html"
+      "destination": "/public/adminDashboard.html"
     },
     {
       "source": "/admin-form.html",
-      "destination": "/admin/admin-form.html"
+      "destination": "/public/adminForm.html"
     },
     {
       "source": "/vcard-clients-dashboard.html",
-      "destination": "/vcard-client-dashboard/vcard-clients-dashboard.html"
+      "destination": "/public/vcardClientDashboard.html"
     }
   ]
 }
