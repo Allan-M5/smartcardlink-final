@@ -1,0 +1,17 @@
+/* C:\Users\ADMIN\Desktop\smartcardlink-app\public\output.css */
+
+/*
+* This file is intentionally left blank.
+* It is a placeholder for the output of your Tailwind CSS build process.
+* If you are using a build tool, it will generate the final CSS here.
+* If you are not using a build tool, you can paste the generated CSS here directly.
+*/
+
+/* Example styles to demonstrate it's working */
+body {
+    background-color: #f8fafc; /* Tailwind's gray-50 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}

@@ -1,0 +1,16 @@
+﻿{
+  "name": "John Doe",
+  "title": "Software Developer",
+  "phone": "+254712345678",
+  "email": "johndoe@example.com",
+  "whatsapp": "https://wa.me/254712345678",
+  "profileImage": "profile.jpg",
+  "bio": "Experienced Software Developer with a passion for building impactful applications that improve lives.",
+  "socialLinks": {
+    "twitter": "https://twitter.com/johndoe",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "github": "https://github.com/johndoe"
+  },
+  "address": "Nairobi, Kenya",
+  "additionalInfo": "Available for remote projects and collaboration worldwide."
+}

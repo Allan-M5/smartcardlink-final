@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+REV:2025-08-15T00:23:21.734Z
+N;CHARSET=utf-8:Client;Test;;;
+FN;CHARSET=utf-8:Test Client
+ORG;CHARSET=utf-8:Test Company
+EMAIL;INTERNET:testclient@example.com
+TEL:+254711223344
+URL:https://smartcardlink.example.com/testclient
+END:VCARD

@@ -1,0 +1,8 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+  .debug-red {
+    outline: 2px solid red;
+  }
+}

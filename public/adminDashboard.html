@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartCardLink Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            background: none;
+            position: relative;
+            color: #e2e8f0;
+            transition: all 0.5s ease-in-out;
+        }
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            filter: brightness(0.4) saturate(1.2);
+            object-fit: cover;
+        }
+        .dashboard-card, .login-card {
+            background-color: #111;
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            border: 1px solid #333;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .login-card {
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1.title {
+            color: #FFD700;
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+        input, select, textarea {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #555;
+            box-sizing: border-box;
+            background-color: #222;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        /* New styles for the login form inputs */
+        #loginCard input {
+            background-color: white;
+            color: black;
+            border-color: #ddd;
+        }
+        #loginCard input::placeholder {
+            color: #555;
+        }
+        #loginCard input:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #FFD700;
+            background-color: #1a1a1a;
+            color: #FFD700;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #FFD700;
+            color: black;
+        }
+        button:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+        .table-container {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background-color: #222;
+            color: #FFD700;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        td {
+            background-color: #1a1a1a;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        tbody tr:hover {
+            background-color: #2d2d2d;
+        }
+        tbody tr.selected {
+            background-color: #3b3b3b;
+            outline: 2px solid #FFD700;
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+        }
+        .status-Pending { background-color: #d69e2e; }
+        .status-Processed { background-color: #4299e1; }
+        .status-Active { background-color: #38a169; }
+        .status-Disabled { background-color: #e53e3e; }
+        .status-Deleted { background-color: #4a5568; }
+        .client-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #555;
+        }
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: nowrap;
+        }
+        .actions-cell button {
+            flex-grow: 1;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .btn-action-process { background-color: #3b82f6; color: white; border-color: #3b82f6;}
+        .btn-action-disable { background-color: #ef4444; color: white; border-color: #ef4444;}
+        .btn-action-reactivate { background-color: #22c55e; color: white; border-color: #22c55e;}
+        .btn-action-delete { background-color: #a8a29e; color: white; border-color: #a8a29e;}
+        
+        .section-header {
+            background-color: #1f2937;
+            color: #FFD700;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: 0.375rem;
+            font-weight: 600;
+        }
+        .notes-container {
+            background-color: #1a1a1a;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .notes-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            background-color: #222;
+        }
+        .note-item {
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .note-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .note-timestamp {
+            font-size: 0.75rem;
+            color: #999;
+        }
+        .notes-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .notes-save-btn {
+            background-color: black;
+            color: white;
+            border: 1px solid #FFD700;
+        }
+        .notes-save-btn:hover {
+            background-color: #FFD700;
+            color: black;
+        }
+        .toast-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+        .toast {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success { background-color: #22c55e; color: white; }
+        .toast.error { background-color: #ef4444; color: white; }
+        .logout-btn {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            font-weight: 600;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .controls-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="https://res.cloudinary.com/dicvwaud3/video/upload/v1754439276/oyvgam7oizwizgwxaxge.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+
+    <div id="loginCard" class="login-card">
+        <h1 class="title">Admin Dashboard Login</h1>
+        <p style="color: #aaa; text-align: center;">Please enter your email and password to continue.</p>
+        <input type="email" id="emailInput" placeholder="Enter email" required />
+        <input type="password" id="passwordInput" placeholder="Enter password" required />
+        <button id="loginBtn">Login</button>
+    </div>
+
+    <div id="dashboardContainer" class="dashboard-card" style="display: none;">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="title">SmartCardLink Admin Dashboard</h1>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+        
+        <div class="controls-container">
+            <div class="search-container">
+                <input type="text" id="filterInput" placeholder="Search clients by name, email, or phone" />
+                <button id="searchBtn">Search</button>
+            </div>
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Processed">Processed</option>
+                <option value="Active">Active</option>
+                <option value="Disabled">Disabled</option>
+                <option value="Deleted">Deleted</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody">
+                    <tr><td colspan="6" style="text-align:center;">Loading client data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="notesSection" class="notes-container">
+            <h2 class="section-header">Client Notes</h2>
+            <div id="notesList" class="notes-list"></div>
+            <div class="notes-input-area">
+                <textarea id="notesTextarea" placeholder="Add a new note..."></textarea>
+                <button id="saveNoteBtn">Save Note</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // The API base URL was updated to use a known working fallback server URL.
+        const API_BASE_URL = 'https://smartcardlink-flyio-fallback.fly.dev';
+        
+        // DOM Elements
+        const loginCard = document.getElementById('loginCard');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        const clientTableBody = document.getElementById('clientTableBody');
+        const filterInput = document.getElementById('filterInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const searchBtn = document.getElementById('searchBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const notesSection = document.getElementById('notesSection');
+        const notesList = document.getElementById('notesList');
+        const notesTextarea = document.getElementById('notesTextarea');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
+        const toastContainer = document.getElementById('toast-container');
+        
+        // Global State
+        let allClients = [];
+        let selectedClientId = null;
+        
+        const showToast = (message, type = 'success') => {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 5000);
+        };
+        
+        const getToken = () => localStorage.getItem('adminToken');
+        
+        const renderTable = (clients) => {
+            clientTableBody.innerHTML = '';
+            if (clients.length === 0) {
+                clientTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No clients found.</td></tr>';
+                return;
+            }
+            
+            clients.forEach(client => {
+                const row = document.createElement('tr');
+                row.dataset.clientId = client._id;
+                if (client._id === selectedClientId) {
+                    row.classList.add('selected');
+                }
+                const photoUrl = client.photoUrl || 'https://placehold.co/50x50/111/fff?text=No+Photo';
+                const clientStatus = client.status || 'Pending';
+                
+                row.innerHTML = `
+                    <td><img src="${photoUrl}" alt="${client.fullName} photo" class="client-photo" onerror="this.onerror=null; this.src='https://placehold.co/50x50/111/fff?text=No+Photo';" /></td>
+                    <td>${client.fullName || 'N/A'}</td>
+                    <td>${client.phone1 || 'N/A'}</td>
+                    <td>${client.email1 || 'N/A'}</td>
+                    <td><span class="status-badge status-${clientStatus.replace(/\s/g, '')}">${clientStatus}</span></td>
+                    <td class="actions-cell">
+                        ${clientStatus === 'Pending' ? `<button class="btn-action-process" onclick="processClient('${client._id}')">Process</button>` : ''}
+                        ${clientStatus === 'Active' ? `<button class="btn-action-disable" onclick="updateStatus('${client._id}', 'Disabled')">Disable</button>` : ''}
+                        ${clientStatus === 'Disabled' ? `<button class="btn-action-reactivate" onclick="updateStatus('${client._id}', 'Active')">Reactivate</button>` : ''}
+                        ${clientStatus !== 'Deleted' ? `<button class="btn-action-delete" onclick="updateStatus('${client._id}', 'Deleted')">Delete</button>` : ''}
+                    </td>
+                `;
+                
+                // FIX: Added 'async' to the event listener to handle the promise returned by selectClient.
+                row.addEventListener('click', async () => {
+                    await selectClient(client._id);
+                });
+                
+                clientTableBody.appendChild(row);
+            });
+        };
+        
+        const filterClients = () => {
+            const searchTerm = filterInput.value.toLowerCase();
+            const selectedStatus = statusFilter.value;
+            
+            const filtered = allClients.filter(client => {
+                const matchesSearch = searchTerm === '' || 
+                    (client.fullName && client.fullName.toLowerCase().includes(searchTerm)) ||
+                    (client.email1 && client.email1.toLowerCase().includes(searchTerm)) ||
+                    (client.phone1 && client.phone1.toLowerCase().includes(searchTerm));
+                
+                const matchesStatus = selectedStatus === '' || client.status === selectedStatus;
+                
+                return matchesSearch && matchesStatus;
+            });
+            renderTable(filtered);
+        };
+        
+        const fetchClients = async () => {
+            const token = getToken();
+            if (!token) return;
+            
+            clientTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading client data...</td></tr>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/clients`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to fetch clients.');
+                
+                allClients = data;
+                filterClients();
+                showToast('Client data loaded successfully!', 'success');
+            } catch (error) {
+                console.error("Fetch error:", error);
+                showToast(`Failed to load clients: ${error.message}`, 'error');
+                clientTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Failed to load data.</td></tr>';
+            }
+        };
+        
+        const renderNotes = async () => {
+            notesList.innerHTML = '';
+            if (!selectedClientId) {
+                notesSection.style.display = 'none';
+                return;
+            }
+            
+            notesSection.style.display = 'flex';
+            const token = getToken();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/clients/${selectedClientId}/notes`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to fetch notes.');
+                
+                const notes = await response.json();
+                notes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                notes.forEach(note => {
+                    const noteItem = document.createElement('div');
+                    noteItem.classList.add('note-item');
+                    const date = new Date(note.timestamp);
+                    const formattedDate = date.toLocaleString();
+                    noteItem.innerHTML = `
+                        <div class="note-timestamp">${formattedDate}</div>
+                        <div class="note-text">${note.text}</div>
+                    `;
+                    notesList.appendChild(noteItem);
+                });
+            } catch (error) {
+                console.error("Error fetching notes:", error);
+                showToast("Failed to load notes.", 'error');
+            }
+        };
+        
+        const selectClient = async (clientId) => {
+            if (selectedClientId === clientId) {
+                selectedClientId = null;
+                notesSection.style.display = 'none';
+            } else {
+                selectedClientId = clientId;
+                await renderNotes();
+            }
+            filterClients();
+        };
+        
+        window.updateStatus = async (clientId, status) => {
+            const token = getToken();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/clients/${clientId}/status/${status}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to update status.');
+                
+                showToast(`Client status updated to '${status}'.`);
+                await fetchClients();
+            } catch (error) {
+                console.error("Error updating status:", error);
+                showToast(`Failed to update status: ${error.message}`, 'error');
+            }
+        };
+        
+        window.processClient = (clientId) => {
+            window.open(`/admin_form.html?id=${clientId}`, '_blank');
+        };
+        
+        // Event Listeners
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Invalid credentials.');
+                }
+                
+                const { token } = await response.json();
+                localStorage.setItem('adminToken', token);
+                
+                showToast('Login successful!');
+                loginCard.style.display = 'none';
+                dashboardContainer.style.display = 'flex';
+                await fetchClients();
+            } catch (error) {
+                console.error("Login failed:", error);
+                showToast(`Login failed: ${error.message}`, 'error');
+            }
+        });
+        
+        filterInput.addEventListener('input', filterClients);
+        statusFilter.addEventListener('change', filterClients);
+        searchBtn.addEventListener('click', filterClients);
+        
+        saveNoteBtn.addEventListener('click', async () => {
+            const noteText = notesTextarea.value.trim();
+            if (noteText === '') {
+                showToast('Note cannot be empty.', 'error');
+                return;
+            }
+            
+            const token = getToken();
+            if (!selectedClientId) {
+                showToast('Please select a client first.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/clients/${selectedClientId}/notes`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ text: noteText })
+                });
+                
+                if (!response.ok) throw new Error('Failed to save note.');
+                
+                notesTextarea.value = '';
+                showToast('Note saved successfully!');
+                await renderNotes();
+            } catch (error) {
+                console.error("Error saving note:", error);
+                showToast(`Failed to save note: ${error.message}`, 'error');
+            }
+        });
+        
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('adminToken');
+            window.location.reload();
+        });
+        
+        // Initial check on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getToken();
+            if (token) {
+                loginCard.style.display = 'none';
+                dashboardContainer.style.display = 'flex';
+                await fetchClients();
+            }
+        });
+    </script>
+</body>
+</html>

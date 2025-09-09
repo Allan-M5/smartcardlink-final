@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SmartCardLink Client Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1rem;
+    background: none;
+    position: relative;
+    color: white;
+  }
+  #bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -100;
+    filter: brightness(0.4) saturate(1.2);
+    object-fit: cover;
+  }
+  .form-card {
+    background-color: #111;
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 750px;
+    border: 1px solid #333;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    overflow-y: auto;
+  }
+  h1.title {
+    color: #FFD700;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  button {
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    border: 1px solid #FFD700;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  button:hover {
+    background-color: #FFD700;
+    color: black;
+  }
+  .section-header {
+    background-color: #1f2937;
+    color: #FFD700;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 0.375rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  label {
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #ccc;
+    resize: vertical;
+    box-sizing: border-box;
+    background-color: white;
+    color: black;
+  }
+  .grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .payment-info, .disclaimer {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #FFD700;
+    border-radius: 0.5rem;
+    background-color: #1a1a1a;
+    text-align: center;
+  }
+  .payment-info p {
+    margin: 0.25rem 0;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+  }
+  .disclaimer h3 {
+    margin: 0;
+    color: #FFD700;
+  }
+  .disclaimer ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+    margin-top: 0.5rem;
+  }
+  .disclaimer li {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 768px) {
+    .grid-2col {
+      grid-template-columns: 1fr;
+    }
+  }
+  .result {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    display: none;
+  }
+  .result a { color: #FFD700; word-break: break-all; }
+  .form-message {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    display: none;
+  }
+  .form-message.success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    display: block;
+  }
+  .form-message.error {
+    background-color: #f8d7da;
+    color: #842029;
+    display: block;
+  }
+</style>
+</head>
+<body>
+<video autoplay muted loop playsinline id="bg-video">
+  <source src="https://res.cloudinary.com/dicvwaud3/video/upload/v1754439276/oyvgam7oizwizgwxaxge.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div class="form-card">
+  <h1 class="title">SmartCardLink Client Form</h1>
+
+  <form id="clientForm" autocomplete="off">
+    <div class="section-header">Personal Details</div>
+    <div class="grid-2col">
+      <div>
+        <label for="fullName">Full Name</label>
+        <input type="text" name="fullName" id="fullName" autocomplete="name" required />
+      </div>
+      <div>
+        <label for="title">Title/Position</label>
+        <input type="text" name="title" id="title" autocomplete="organization-title" />
+      </div>
+    </div>
+    <div class="grid-2col">
+      <div>
+        <label for="phone1">Phone Number 1 (Main/Default)</label>
+        <input type="tel" name="phone1" id="phone1" autocomplete="tel" required />
+      </div>
+      <div>
+        <label for="phone2">Phone Number 2</label>
+        <input type="tel" name="phone2" id="phone2" autocomplete="tel-alternate" />
+      </div>
+    </div>
+    <div>
+      <label for="phone3">Phone Number 3</label>
+      <input type="tel" name="phone3" id="phone3" autocomplete="tel-extension" />
+    </div>
+    <div class="grid-2col">
+      <div>
+        <label for="email1">Email 1 (Main/Default)</label>
+        <input type="email" name="email1" id="email1" autocomplete="email" required />
+      </div>
+      <div>
+        <label for="email2">Email 2</label>
+        <input type="email" name="email2" id="email2" autocomplete="new-email2" />
+      </div>
+    </div>
+    <div>
+      <label for="email3">Email 3</label>
+      <input type="email" name="email3" id="email3" autocomplete="new-email3" />
+    </div>
+
+    <div class="section-header">Business Details</div>
+    <div class="grid-2col">
+      <div>
+        <label for="company">Company Name</label>
+        <input type="text" name="company" id="company" autocomplete="organization" required />
+      </div>
+      <div>
+        <label for="businessWebsite">Business Website</label>
+        <input type="url" name="businessWebsite" id="businessWebsite" autocomplete="url" />
+       </div>
+    </div>
+    <div class="grid-2col">
+      <div>
+        <label for="portfolioWebsite">Portfolio Website</label>
+        <input type="url" name="portfolioWebsite" id="portfolioWebsite" autocomplete="url" />
+      </div>
+      <div>
+        <label for="locationMap">Location Map URL</label>
+        <input type="url" name="locationMap" id="locationMap" autocomplete="url" />
+      </div>
+    </div>
+
+    <div class="section-header">Working Hours</div>
+    <div class="grid-2col">
+      <div><label for="monFriStart">Mon-Fri Start</label><input type="time" name="monFriStart" id="monFriStart" value="08:00" /></div>
+      <div><label for="monFriEnd">Mon-Fri End</label><input type="time" name="monFriEnd" id="monFriEnd" value="17:00" /></div>
+      <div><label for="satStart">Saturday Start</label><input type="time" name="satStart" id="satStart" value="09:00" /></div>
+      <div><label for="satEnd">Saturday End</label><input type="time" name="satEnd" id="satEnd" value="12:00" /></div>
+      <div><label for="sunStart">Sunday Start</label><input type="time" name="sunStart" id="sunStart" disabled /></div>
+      <div><label for="sunEnd">Sunday End</label><input type="time" name="sunEnd" id="sunEnd" disabled /></div>
+    </div>
+
+    <div class="section-header">Social Links</div>
+    <div class="grid-2col">
+      <div><label for="facebook">Facebook</label><input type="url" name="facebook" id="facebook" autocomplete="off" /></div>
+      <div><label for="instagram">Instagram</label><input type="url" name="instagram" id="instagram" autocomplete="off" /></div>
+      <div><label for="twitter">X (Twitter)</label><input type="url" name="twitter" id="twitter" autocomplete="off" /></div>
+      <div><label for="linkedin">LinkedIn</label><input type="url" name="linkedin" id="linkedin" autocomplete="off" /></div>
+      <div><label for="tiktok">TikTok</label><input type="url" name="tiktok" id="tiktok" autocomplete="off" /></div>
+      <div><label for="youtube">YouTube</label><input type="url" name="youtube" id="youtube" autocomplete="off" /></div>
+    </div>
+
+    <div class="section-header">Bio</div>
+    <textarea name="bio" id="bio" rows="4" autocomplete="off"></textarea>
+
+    <div>
+      <label for="address">Address</label>
+      <input type="text" name="address" id="address" autocomplete="street-address" />
+    </div>
+
+    <div class="payment-info">
+      <h3 style="color:#FFD700; margin-top:0;">Payment (MPESA)</h3>
+      <p style="font-size: 1.2rem; font-weight: bold;">Pochi La Biashara: 0702444552</p>
+    </div>
+
+    <div class="disclaimer">
+      <h3 style="color:#FFD700;">Disclaimer</h3>
+      <ul>
+        <li>I certify that the information provided is accurate and truthful.</li>
+        <li>I understand that payment is required for this service to be activated.</li>
+        <li>I acknowledge that SmartCardLink is not liable for inaccurate details I have submitted.</li>
+      </ul>
+    </div>
+
+    <button type="submit">Submit Form</button>
+  </form>
+
+  <div class="form-message" id="formMessage"></div>
+</div>
+
+<script>
+  // Use the single, correct API URL from the blueprint
+  const API_BASE_URL = "https://server.smartcardlink.perfectparcelsstore.com/api";
+
+  const form = document.getElementById("clientForm");
+  const formMessage = document.getElementById("formMessage");
+
+  function showMessage(message, type) {
+    formMessage.innerHTML = message;
+    formMessage.className = `form-message ${type}`;
+    formMessage.style.display = 'block';
+  }
+
+  async function submitForm() {
+    const formData = new FormData(form);
+    const payload = {
+      fullName: formData.get('fullName')?.trim() || '',
+      title: formData.get('title')?.trim() || '',
+      company: formData.get('company')?.trim() || '',
+      phone1: formData.get('phone1')?.trim() || '',
+      phone2: formData.get('phone2')?.trim() || '',
+      phone3: formData.get('phone3')?.trim() || '',
+      email1: formData.get('email1')?.trim() || '',
+      email2: formData.get('email2')?.trim() || '',
+      email3: formData.get('email3')?.trim() || '',
+      businessWebsite: formData.get('businessWebsite')?.trim() || '',
+      portfolioWebsite: formData.get('portfolioWebsite')?.trim() || '',
+      locationMap: formData.get('locationMap')?.trim() || '',
+      bio: formData.get('bio')?.trim() || '',
+      address: formData.get('address')?.trim() || '',
+      socialLinks: {},
+      workingHours: {}
+    };
+
+    const socialKeys = ['facebook', 'instagram', 'twitter', 'linkedin', 'tiktok', 'youtube'];
+    socialKeys.forEach(key => {
+      const value = formData.get(key)?.trim();
+      if (value) payload.socialLinks[key] = value;
+    });
+    
+    const hoursKeys = ['monFriStart', 'monFriEnd', 'satStart', 'satEnd', 'sunStart', 'sunEnd'];
+    hoursKeys.forEach(key => {
+      const value = formData.get(key)?.trim();
+      if (value) payload.workingHours[key] = value;
+    });
+
+    if (!payload.fullName || !payload.phone1 || !payload.email1 || !payload.company) {
+      throw new Error("Please fill in all required fields: Full Name, Phone 1, Email 1, and Company.");
+    }
+
+    const resp = await fetch(`${API_BASE_URL}/clients`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!resp.ok) {
+      const errorData = await resp.json();
+      throw new Error(errorData.message || `Server error with status: ${resp.status}`);
+    }
+
+    return await resp.json();
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    showMessage("", "");
+    
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+
+    try {
+      showMessage("<span>✉</span> Submitting form...", "info");
+      const data = await submitForm();
+      const recordId = data.recordId || data.id || 'N/A';
+      const successMessage = `<span>✔</span> Success! Your form has been submitted. We will contact you shortly.<br><strong>Your Record ID: ${recordId}</strong>`;
+      showMessage(successMessage, "success");
+      form.reset();
+
+    } catch (err) {
+      const message = err.message.startsWith("Please fill in") ? err.message : `<span>❌</span> Submission failed. Server error. Please try again later.`;
+      showMessage(message, "error");
+      console.error(err);
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

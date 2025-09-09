@@ -1,0 +1,15 @@
+.popup-photo-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.popup-photo-frame img {
+  width: 28%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 50% / 40%;
+  border: 3px solid gold;
+  box-shadow: 0 0 15px gold;
+}

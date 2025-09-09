@@ -1,0 +1,12 @@
+2025/08/15-03:33:08.836 3f5c Reusing MANIFEST C:\Users\ADMIN\Desktop\smartcardlink-app\server\.wwebjs_auth\session-admin\Default\Local Storage\leveldb/MANIFEST-000001
+2025/08/15-03:33:08.839 3f5c Recovering log #4
+2025/08/15-03:33:08.841 3f5c Reusing old log C:\Users\ADMIN\Desktop\smartcardlink-app\server\.wwebjs_auth\session-admin\Default\Local Storage\leveldb/000004.log 
+2025/08/15-09:15:17.853 5e38 Level-0 table #8: started
+2025/08/15-09:15:17.867 5e38 Level-0 table #8: 19781 bytes OK
+2025/08/15-09:15:17.873 5e38 Delete type=0 #4
+2025/08/15-23:00:24.860 5870 Level-0 table #10: started
+2025/08/15-23:00:24.870 5870 Level-0 table #10: 17623 bytes OK
+2025/08/15-23:00:24.878 5870 Delete type=0 #7
+2025/08/16-12:44:32.741 1090 Level-0 table #12: started
+2025/08/16-12:44:32.753 1090 Level-0 table #12: 17681 bytes OK
+2025/08/16-12:44:32.761 1090 Delete type=0 #9

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartCardLink Client Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="output.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    .form-card {
+      background-color: #111;
+      border-radius: 1rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 750px;
+      border: 1px solid #333;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    h1.title {
+      color: #FFD700;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    label {
+      color: white;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      border: 1px solid #ccc;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+    #submitBtn {
+      background-color: black;
+      color: white;
+      border: 1px solid #FFD700;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #submitBtn:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+    .section-header {
+      background-color: #1f2937;
+      color: #FFD700;
+      padding: 0.5rem;
+      text-align: center;
+      border-radius: 0.375rem;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-card">
+    <h1 class="title">SmartCardLink Client Form</h1>
+    <form id="clientForm">
+      <div class="section-header">Personal Details</div>
+      <div class="grid-2col">
+        <div><label>Full Name</label><input type="text" name="fullName" required /></div>
+        <div><label>Title/Position</label><input type="text" name="title" required /></div>
+      </div>
+      <div class="grid-2col">
+        <div><label>Phone Number 1 (Main/Default)</label><input type="text" name="phone1" required /></div>
+        <div><label>Phone Number 2</label><input type="text" name="phone2" /></div>
+      </div>
+      <div><label>Phone Number 3</label><input type="text" name="phone3" /></div>
+      <div class="grid-2col">
+        <div><label>Email 1 (Main/Default)</label><input type="email" name="email1" required /></div>
+        <div><label>Email 2</label><input type="email" name="email2" /></div>
+      </div>
+      <div><label>Email 3</label><input type="email" name="email3" /></div>
+
+      <div class="section-header">Business Details</div>
+      <div class="grid-2col">
+        <div><label>Company Name</label><input type="text" name="company" required /></div>
+        <div><label>Business Website</label><input type="text" name="businessWebsite" /></div>
+      </div>
+      <div class="grid-2col">
+        <div><label>Portfolio Website</label><input type="text" name="portfolioWebsite" /></div>
+        <div><label>Location Map URL</label><input type="text" name="locationMap" /></div>
+      </div>
+
+      <div class="section-header">Working Hours</div>
+      <div class="grid-2col">
+        <div><label>Mon-Fri Start</label><input type="time" name="monFriStart" value="08:00" /></div>
+        <div><label>Mon-Fri End</label><input type="time" name="monFriEnd" value="17:00" /></div>
+        <div><label>Saturday Start</label><input type="time" name="satStart" value="09:00" /></div>
+        <div><label>Saturday End</label><input type="time" name="satEnd" value="12:00" /></div>
+        <div><label>Sunday Start</label><input type="time" name="sunStart" disabled /></div>
+        <div><label>Sunday End</label><input type="time" name="sunEnd" disabled /></div>
+      </div>
+
+      <div class="section-header">Social Links</div>
+      <div class="grid-2col">
+        <div><label>Facebook</label><input type="text" name="facebook" /></div>
+        <div><label>Instagram</label><input type="text" name="instagram" /></div>
+        <div><label>X (Twitter)</label><input type="text" name="twitter" /></div>
+        <div><label>LinkedIn</label><input type="text" name="linkedin" /></div>
+        <div><label>TikTok</label><input type="text" name="tiktok" /></div>
+        <div><label>YouTube</label><input type="text" name="youtube" /></div>
+      </div>
+
+      <div class="section-header">Bio</div>
+      <textarea name="bio" rows="4"></textarea>
+
+      <div><label>Address</label><input type="text" name="address" /></div>
+
+      <button type="submit" id="submitBtn">Submit Form</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById("clientForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = {};
+      new FormData(e.target).forEach((v, k) => {
+        formData[k] = v || "(Not provided)";
+      });
+      console.log(formData);
+      alert("Form submitted successfully.");
+    });
+  </script>
+</body>
+</html>
