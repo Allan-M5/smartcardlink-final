@@ -1,19 +1,20 @@
 {
   "rewrites": [
-    { "source": "/client-form.html", "destination": "/client/client-form.html" },
-    { "source": "/admin-dashboard.html", "destination": "/admin/admin-dashboard.html" },
-    { "source": "/admin-form.html", "destination": "/admin/admin-form.html" },
-    { "source": "/vcard-clients-dashboard.html", "destination": "/vcard-client-dashboard/vcard-clients-dashboard.html" }
-  ],
-  "headers": [
     {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://smartcardlink-frontend.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,DELETE,PATCH,POST,PUT,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
-      ]
+      "source": "/client-form.html",
+      "destination": "/client/client-form.html"
+    },
+    {
+      "source": "/admin-dashboard.html",
+      "destination": "/admin/admin-dashboard.html"
+    },
+    {
+      "source": "/admin-form.html",
+      "destination": "/admin/admin-form.html"
+    },
+    {
+      "source": "/vcard-clients-dashboard.html",
+      "destination": "/vcard-client-dashboard/vcard-clients-dashboard.html"
     }
   ]
 }
