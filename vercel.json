@@ -15,6 +15,22 @@
     {
       "source": "/vcard-clients-dashboard.html",
       "destination": "/public/vcardClientDashboard.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/public/index.html"
+    },
+    {
+      "source": "/popup1.html",
+      "destination": "/public/popup1/popup1.html"
+    },
+    {
+      "source": "/popup2.html",
+      "destination": "/public/popup2/popup2.html"
+    },
+    {
+      "source": "/staff-login.html",
+      "destination": "/public/staffLogin.html"
     }
   ]
 }
