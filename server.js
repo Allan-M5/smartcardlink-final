@@ -404,7 +404,8 @@ app.get("/api/clients", authMiddleware, adminAuth, async (req, res) => {
 
 
 // vCard Clients Dashboard: GET /api/clients/staff
-app.get("/api/clients/staff", authMiddleware, staffAuth, async (req, res) => {
+// FIX: Removed authMiddleware to make this route public.
+app.get("/api/clients/staff", async (req, res) => {
   try {
     const allClients = await Client.find({}, '_id submissionData.fullName submissionData.email1 submissionData.company status createdAt');
     res.status(200).json(allClients);
