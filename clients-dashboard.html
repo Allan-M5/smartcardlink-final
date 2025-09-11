@@ -269,8 +269,9 @@
         const staffToken = localStorage.getItem('staffToken');
         let allClients = [];
 
+        // Corrected initial redirect path
         if (!staffToken) {
-            window.location.href = '/staffLogin.html';
+            window.location.href = 'staffLogin.html';
         }
 
         const showToast = (message, type = 'info') => {
@@ -359,7 +360,9 @@
         searchBtn.addEventListener('click', filterClients);
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('staffToken');
-            window.location.href = '/staffLogin.html';
+            
+            // Corrected logout redirect path
+            window.location.href = 'staffLogin.html';
         });
 
         fetchClients();
