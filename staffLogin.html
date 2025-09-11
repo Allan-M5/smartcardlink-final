@@ -193,11 +193,12 @@
             const correctPassword = 'Smartcardlink2025!';
 
             if (enteredPassword === correctPassword) {
-                localStorage.setItem('isLoggedIn', 'true');
+                // This now sets the 'staffToken' that the dashboard is expecting.
+                localStorage.setItem('staffToken', 'placeholder-token-12345');
                 showToast('Login successful!', 'success');
                 
-                // Using the full URL ensures a reliable redirect.
-                window.location.href = 'https://allan-m5.github.io/smartcardlink-final/clients-dashboard.html';
+                // This now redirects to the correct dashboard file.
+                window.location.href = 'clients-dashboard.html';
                 
             } else {
                 showToast('Invalid password. Please try again.', 'error');
