@@ -275,8 +275,8 @@
 </div>
 
 <script>
-  // Use the single, correct API URL from the blueprint
-  const API_BASE_URL = "https://server.smartcardlink.perfectparcelsstore.com/api";
+  // Correct API URL based on your Fly.io app name
+  const API_BASE_URL = "https://smartcardlink-app.fly.dev";
 
   const form = document.getElementById("clientForm");
   const formMessage = document.getElementById("formMessage");
@@ -324,7 +324,7 @@
       throw new Error("Please fill in all required fields: Full Name, Phone 1, Email 1, and Company.");
     }
 
-    const resp = await fetch(`${API_BASE_URL}/clients`, {
+    const resp = await fetch(`${API_BASE_URL}/api/clients`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
