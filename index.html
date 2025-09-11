@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartCardLink - Home vCard</title>
 
-  <!-- Popup1 styles -->
   <link rel="stylesheet" href="popup1/popup1-header.css"/>
   <link rel="stylesheet" href="popup1/popup1-profile.css"/>
   <link rel="stylesheet" href="popup1/popup1-name-business-title.css"/>
@@ -14,6 +13,17 @@
   <link rel="stylesheet" href="popup1/popup1-moreinfo.css"/>
   <link rel="stylesheet" href="popup1/popup1-container.css"/>
   <link rel="stylesheet" href="popup1/popup1-border-animation.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
   <div class="popup-container gold-border">
@@ -28,15 +38,15 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loadSection = (id, file) => {
-        fetch(file)
-          .then(res => {
-            if (!res.ok) throw new Error(`Failed to load ${file}`);
-            return res.text();
-          })
-          .then(html => {
-            document.getElementById(id).innerHTML = html;
-          })
-          .catch(err => console.error(`Error loading ${file}:`, err));
+          fetch(file)
+              .then(res => {
+                  if (!res.ok) throw new Error(`Failed to load ${file}`);
+                  return res.text();
+              })
+              .then(html => {
+                  document.getElementById(id).innerHTML = html;
+              })
+              .catch(err => console.error(`Error loading ${file}:`, err));
       };
 
       loadSection('header-placeholder', 'popup1/popup1-header.html');
@@ -47,18 +57,18 @@
       loadSection('moreinfo-placeholder', 'popup1/popup1-moreinfo.html');
 
       document.addEventListener('click', e => {
-        if (e.target.classList.contains('phone-expand-btn')) {
-          const extraList = e.target.closest('.contact-box').querySelector('.contact-extra-list');
-          extraList.classList.toggle('open');
-        }
-        if (e.target.classList.contains('email-expand-btn')) {
-          const extraList = e.target.closest('.contact-box').querySelector('.email-extra-list');
-          extraList.classList.toggle('open');
-        }
-        if (e.target.classList.contains('more-info-btn')) {
-          e.preventDefault();
-          window.location.href = 'popup2.html';
-        }
+          if (e.target.classList.contains('phone-expand-btn')) {
+              const extraList = e.target.closest('.contact-box').querySelector('.contact-extra-list');
+              extraList.classList.toggle('open');
+          }
+          if (e.target.classList.contains('email-expand-btn')) {
+              const extraList = e.target.closest('.contact-box').querySelector('.email-extra-list');
+              extraList.classList.toggle('open');
+          }
+          if (e.target.classList.contains('more-info-btn')) {
+              e.preventDefault();
+              window.location.href = 'popup2.html';
+          }
       });
     });
   </script>
