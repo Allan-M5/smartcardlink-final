@@ -190,15 +190,15 @@
             loginBtn.disabled = true;
 
             const enteredPassword = document.getElementById('password').value;
-            const correctPassword = 'Smartcardlink2025!'; // New hard-coded password
+            const correctPassword = 'Smartcardlink2025!';
 
             if (enteredPassword === correctPassword) {
                 localStorage.setItem('isLoggedIn', 'true');
                 showToast('Login successful!', 'success');
                 
-                setTimeout(() => {
-                    window.location.href = 'clients-dashboard.html';
-                }, 1000);
+                // Using the full URL ensures a reliable redirect.
+                window.location.href = 'https://allan-m5.github.io/smartcardlink-final/clients-dashboard.html';
+                
             } else {
                 showToast('Invalid password. Please try again.', 'error');
                 loginBtn.innerHTML = 'Login';
