@@ -181,17 +181,18 @@
                 toast.addEventListener('transitionend', () => toast.remove());
             }, 5000);
         };
-
+        
+        // TEMPORARY NOTE: The login password for this static page is: Smartcardlink2025!
+        
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             loginBtn.innerHTML = 'Logging in... <span class="spinner"></span>';
             loginBtn.disabled = true;
 
             const enteredPassword = document.getElementById('password').value;
-            const correctPassword = 'admin'; // Correct password hard-coded for static hosting
+            const correctPassword = 'Smartcardlink2025!'; // New hard-coded password
 
             if (enteredPassword === correctPassword) {
-                // For a static site, we don't have a token. We can use a simple flag.
                 localStorage.setItem('isLoggedIn', 'true');
                 showToast('Login successful!', 'success');
                 
