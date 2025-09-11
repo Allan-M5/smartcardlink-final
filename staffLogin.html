@@ -165,8 +165,7 @@
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('login-btn');
         const toastContainer = document.getElementById('toast-container');
-        const apiUrl = 'https://server.smartcardlink.perfectparcelsstore.com/api/staff/login';
-
+        
         const showToast = (message, type = 'info') => {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
@@ -188,46 +187,19 @@
             loginBtn.innerHTML = 'Logging in... <span class="spinner"></span>';
             loginBtn.disabled = true;
 
-            const password = document.getElementById('password').value;
+            const enteredPassword = document.getElementById('password').value;
+            const correctPassword = 'admin'; // Correct password hard-coded for static hosting
 
-            // --- PRODUCTION DEBUGGING ---
-            console.log('Attempting to log in with password:', password);
-            console.log('Sending request to API URL:', apiUrl);
-            // --- END PRODUCTION DEBUGGING ---
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ password })
-                });
-
-                const data = await response.json();
-                
-                // --- PRODUCTION DEBUGGING ---
-                console.log('Received response from server:', data);
-                // --- END PRODUCTION DEBUGGING ---
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Login failed.');
-                }
-                
-                localStorage.setItem('staffToken', data.token);
+            if (enteredPassword === correctPassword) {
+                // For a static site, we don't have a token. We can use a simple flag.
+                localStorage.setItem('isLoggedIn', 'true');
                 showToast('Login successful!', 'success');
                 
                 setTimeout(() => {
                     window.location.href = 'clients-dashboard.html';
                 }, 1000);
-
-            } catch (error) {
-                console.error('Login error:', error);
-                const errorMessage = error.message === 'Failed to fetch' 
-                    ? 'Failed to connect to the server. Please check your network and server status.' 
-                    : error.message || 'An unknown error occurred.';
-                showToast(errorMessage, 'error');
-            } finally {
+            } else {
+                showToast('Invalid password. Please try again.', 'error');
                 loginBtn.innerHTML = 'Login';
                 loginBtn.disabled = false;
             }
