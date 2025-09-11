@@ -1,83 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SmartCardLink - Home vCard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartCardLink - Home vCard</title>
 
-  <link rel="stylesheet" href="popup1/popup1-header.css"/>
-  <link rel="stylesheet" href="popup1/popup1-profile.css"/>
-  <link rel="stylesheet" href="popup1/popup1-name-business-title.css"/>
-  <link rel="stylesheet" href="popup1/popup1-contact.css"/>
-  <link rel="stylesheet" href="popup1/popup1-buttons.css"/>
-  <link rel="stylesheet" href="popup1/popup1-moreinfo.css"/>
-  <link rel="stylesheet" href="popup1/popup1-container.css"/>
-  <link rel="stylesheet" href="popup1/popup1-border-animation.css"/>
-
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-  </style>
+  <!-- Popup1 styles -->
+  <link rel="stylesheet" href="popup1/popup1-header.css"/>
+  <link rel="stylesheet" href="popup1/popup1-profile.css"/>
+  <link rel="stylesheet" href="popup1/popup1-name-business-title.css"/>
+  <link rel="stylesheet" href="popup1/popup1-contact.css"/>
+  <link rel="stylesheet" href="popup1/popup1-buttons.css"/>
+  <link rel="stylesheet" href="popup1/popup1-moreinfo.css"/>
+  <link rel="stylesheet" href="popup1/popup1-container.css"/>
+  <link rel="stylesheet" href="popup1/popup1-border-animation.css"/>
 </head>
 <body>
-  <div class="popup-container gold-border">
-    <div id="header-placeholder"></div>
-    <div id="profile-placeholder"></div>
-    <div id="name-business-title-placeholder"></div>
-    <div id="contact-placeholder"></div>
-    <div id="buttons-placeholder"></div>
-    <div id="moreinfo-placeholder"></div>
-  </div>
+  <div class="popup-container gold-border">
+    <div id="header-placeholder"></div>
+    <div id="profile-placeholder"></div>
+    <div id="name-business-title-placeholder"></div>
+    <div id="contact-placeholder"></div>
+    <div id="buttons-placeholder"></div>
+    <div id="moreinfo-placeholder"></div>
+  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loadSection = (id, file) => {
-          fetch(file)
-              .then(res => {
-                  if (!res.ok) throw new Error(`Failed to load ${file}`);
-                  return res.text();
-              })
-              .then(html => {
-                  document.getElementById(id).innerHTML = html;
-              })
-              .catch(err => console.error(`Error loading ${file}:`, err)); // Improved error logging
-      };
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadSection = (id, file) => {
+        fetch(file)
+          .then(res => {
+            if (!res.ok) throw new Error(`Failed to load ${file}`);
+            return res.text();
+          })
+          .then(html => {
+            document.getElementById(id).innerHTML = html;
+          })
+          .catch(err => console.error(`Error loading ${file}:`, err));
+      };
 
-      loadSection('header-placeholder', 'popup1/popup1-header.html');
-      loadSection('profile-placeholder', 'popup1/popup1-profile.html');
-      loadSection('name-business-title-placeholder', 'popup1/popup1-name-business-title.html');
-      loadSection('contact-placeholder', 'popup1/popup1-contact.html');
-      loadSection('buttons-placeholder', 'popup1/popup1-buttons.html');
-      loadSection('moreinfo-placeholder', 'popup1/popup1-moreinfo.html');
+      loadSection('header-placeholder', 'popup1/popup1-header.html');
+      loadSection('profile-placeholder', 'popup1/popup1-profile.html');
+      loadSection('name-business-title-placeholder', 'popup1/popup1-name-business-title.html');
+      loadSection('contact-placeholder', 'popup1/popup1-contact.html');
+      loadSection('buttons-placeholder', 'popup1/popup1-buttons.html');
+      loadSection('moreinfo-placeholder', 'popup1/popup1-moreinfo.html');
 
-      document.addEventListener('click', e => {
-          if (e.target.classList.contains('phone-expand-btn')) {
-              const extraList = e.target.closest('.contact-box').querySelector('.contact-extra-list');
-              extraList.classList.toggle('open');
-          }
-          if (e.target.classList.contains('email-expand-btn')) {
-              const extraList = e.target.closest('.contact-box').querySelector('.email-extra-list');
-              extraList.classList.toggle('open');
-          }
-          if (e.target.classList.contains('more-info-btn')) {
-              e.preventDefault();
-              const popupContainer = document.querySelector('.popup-container');
-              if (popupContainer) { // Ensure popupContainer exists before animating
-                popupContainer.style.transition = 'opacity 0.5s ease';
-                popupContainer.style.opacity = '0';
-              }
-              setTimeout(() => {
-                  window.location.href = 'popup2.html'; // CORRECTED: Points to popup2.html at the root
-              }, 500);
-          }
-      });
-    });
-  </script>
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('phone-expand-btn')) {
+          const extraList = e.target.closest('.contact-box').querySelector('.contact-extra-list');
+          extraList.classList.toggle('open');
+        }
+        if (e.target.classList.contains('email-expand-btn')) {
+          const extraList = e.target.closest('.contact-box').querySelector('.email-extra-list');
+          extraList.classList.toggle('open');
+        }
+        if (e.target.classList.contains('more-info-btn')) {
+          e.preventDefault();
+          window.location.href = 'popup2.html';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
