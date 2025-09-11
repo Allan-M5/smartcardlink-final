@@ -1,3 +1,6 @@
+// ------------------------
+// Imports
+// ------------------------
 const express = require("express");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
@@ -18,19 +21,15 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 const { Parser } = require("json2csv");
 const slugify = require("slugify");
-
+// Ensure environment variables are loaded from a .env file
+dotenv.config();
 
 // ------------------------
-// Configuration
+// Configuration & Initialization
 // ------------------------
 const app = express();
-
-
-// CRITICAL FIX: Get PORT and HOST from environment for Fly.io compatibility
-const PORT = process.env.PORT || 5000; // Updated to 5000 as per Fly.io's requirement
+const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || "0.0.0.0";
-
-
 const MONGO_URI = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 const APP_BASE_URL = process.env.APP_BASE_URL;
@@ -40,13 +39,11 @@ const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 const STAFF_EMAIL = process.env.STAFF_EMAIL;
 const STAFF_PASSWORD_HASH = process.env.STAFF_PASSWORD_HASH;
 
-
 // Email Config
 const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587;
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
-
 
 // Cloudinary config
 cloudinary.config({
@@ -55,7 +52,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
 // Required environment variables check
 const requiredEnv = [
   "MONGODB_URI", "JWT_SECRET", "ADMIN_EMAIL", "ADMIN_PASSWORD_HASH",
@@ -63,15 +59,12 @@ const requiredEnv = [
   "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET", "SMTP_HOST", "SMTP_PORT",
   "SMTP_USER", "SMTP_PASS", "STAFF_EMAIL", "STAFF_PASSWORD_HASH"
 ];
-
-
 for (const key of requiredEnv) {
   if (!process.env[key]) {
     console.error(`❌ Missing required environment variable: ${key}. Aborting.`);
     process.exit(1);
   }
 }
-
 
 // ------------------------
 // Rate limiters & PDF semaphore
@@ -82,14 +75,11 @@ const publicLimiter = RateLimit({
   max: 100,
   message: "Too many requests from this IP, please try again later.",
 });
-
-
 const loginLimiter = RateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
   message: "Too many login attempts from this IP, please try again after 15 minutes.",
 });
-
 
 // ------------------------
 // Middleware
@@ -99,8 +89,6 @@ app.use(helmet({
 }));
 app.use(morgan("combined"));
 
-
-// CORRECTED: Added the GitHub Pages domain to the list of allowed origins.
 const allowedOrigins = [
   'https://smartcardlink.perfectparcelsstore.com',
   'https://smartcardlink.perfectparcelsstore.com/client-form',
@@ -109,12 +97,10 @@ const allowedOrigins = [
   'https://smartcardlink.perfectparcelsstore.com/admin-form',
   APP_BASE_URL,
   APP_FALLBACK_URL,
-  'https://endearing-banoffee-27fd44.netlify.app', // NEW: Your Netlify frontend domain
-  'https://allan-m5.github.io', // NEW: Your GitHub Pages frontend domain
-  'http://localhost:5000' // Temporary for local dev
+  'https://endearing-banoffee-27fd44.netlify.app',
+  'https://allan-m5.github.io',
+  'http://localhost:5000'
 ];
-
-
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(url => origin.startsWith(url))) {
@@ -124,17 +110,11 @@ app.use(cors({
     }
   }
 }));
-
-
 app.use(express.json({ limit: "5mb" }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-// Health check endpoint for Fly.io
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
-
 
 // ------------------------
 // MongoDB Connection
@@ -150,7 +130,6 @@ const connectDB = async () => {
 };
 connectDB();
 
-
 // ------------------------
 // Mongoose Schema & Model
 // ------------------------
@@ -164,7 +143,6 @@ const logSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 const Log = mongoose.model("Log", logSchema);
-
 
 const clientSchema = new mongoose.Schema({
   submissionData: {
@@ -193,7 +171,6 @@ const clientSchema = new mongoose.Schema({
     email1: { type: String, default: "" },
     company: { type: String, default: "" },
     photoUrl: { type: String, default: "" },
-    // etc. All fields that can be edited by admin
   },
   vcardUrl: { type: String, default: "" },
   qrCodeUrl: { type: String, default: "" },
@@ -208,15 +185,11 @@ const clientSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-
 clientSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
-
-
 const Client = mongoose.model("Client", clientSchema);
-
 
 // ------------------------
 // Helpers
@@ -228,7 +201,6 @@ const logAction = async (actorEmail, actorRole, action, targetClientId, notes = 
     console.error(`❌ Failed to log action '${action}' for client ${targetClientId}:`, error);
   }
 };
-
 
 const generatePdfContent = (doc, client) => {
   const data = client.submissionData;
@@ -254,24 +226,22 @@ const generatePdfContent = (doc, client) => {
     doc.moveDown();
     doc.text("Social Links:");
     for (const [key, value] of Object.entries(data.socialLinks)) {
-      if (value) doc.text(`      - ${key}: ${value}`);
+      if (value) doc.text(`         - ${key}: ${value}`);
     }
   }
   if (data.workingHours && typeof data.workingHours === "object") {
     doc.moveDown();
     doc.text("Working Hours:");
     for (const [key, value] of Object.entries(data.workingHours)) {
-      if (value) doc.text(`      - ${key}: ${value}`);
+      if (value) doc.text(`         - ${key}: ${value}`);
     }
   }
 };
-
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ success: false, message: "No token provided." });
   try {
-    // Corrected JWT verification, removed redundant expiresIn parameter
     const decoded = jwt.verify(token, JWT_SECRET, { audience: "smartcardlink", issuer: "smartcardlink-app" });
     req.user = decoded;
     next();
@@ -282,7 +252,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-
 const adminAuth = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
@@ -290,7 +259,6 @@ const adminAuth = (req, res, next) => {
     res.status(403).json({ success: false, message: "Forbidden: Admin access required." });
   }
 };
-
 
 const staffAuth = (req, res, next) => {
   if (req.user && !req.user.isAdmin) {
@@ -300,10 +268,8 @@ const staffAuth = (req, res, next) => {
   }
 };
 
-
 const pdfDir = path.join(__dirname, "vcards");
 if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
-
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
@@ -314,7 +280,6 @@ const transporter = nodemailer.createTransport({
     pass: SMTP_PASS,
   },
 });
-
 
 const sendVCardEmail = async (client) => {
   const vcardUrl = client.vcardUrl;
@@ -343,7 +308,6 @@ const sendVCardEmail = async (client) => {
   }
 };
 
-
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -354,12 +318,9 @@ const storage = new CloudinaryStorage({
 });
 const parser = multer({ storage });
 
-
 // ------------------------
 // Routes
 // ------------------------
-
-
 // Client Submission: POST /api/clients
 app.post("/api/clients", publicLimiter, async (req, res) => {
   try {
@@ -368,13 +329,10 @@ app.post("/api/clients", publicLimiter, async (req, res) => {
     let slug = baseSlug;
     let counter = 1;
 
-
-    // Corrected slug collision logic
     while (await Client.findOne({ 'submissionData.slug': slug })) {
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
-
 
     const client = new Client({
       submissionData: { ...req.body, slug },
@@ -390,7 +348,6 @@ app.post("/api/clients", publicLimiter, async (req, res) => {
   }
 });
 
-
 // Admin Dashboard: GET /api/clients
 app.get("/api/clients", authMiddleware, adminAuth, async (req, res) => {
   try {
@@ -402,9 +359,7 @@ app.get("/api/clients", authMiddleware, adminAuth, async (req, res) => {
   }
 });
 
-
 // vCard Clients Dashboard: GET /api/clients/staff
-// FIX: Removed authMiddleware to make this route public.
 app.get("/api/clients/staff", async (req, res) => {
   try {
     const allClients = await Client.find({}, '_id submissionData.fullName submissionData.email1 submissionData.company status createdAt');
@@ -414,7 +369,6 @@ app.get("/api/clients/staff", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error fetching clients." });
   }
 });
-
 
 // Admin Form: GET /api/clients/:id
 app.get("/api/clients/:id", authMiddleware, async (req, res) => {
@@ -430,17 +384,14 @@ app.get("/api/clients/:id", authMiddleware, async (req, res) => {
   }
 });
 
-
 // Upload Photo (PREVIEW ONLY): POST /api/clients/:id/photo
 app.post("/api/clients/:id/photo", authMiddleware, adminAuth, parser.single("photo"), async (req, res) => {
   if (!req.file || !req.file.path) {
     return res.status(400).json({ success: false, message: "Upload failed: no file provided or path found" });
   }
-  // The photoUrl is for preview only and not persisted to the database here.
   await logAction(req.user.email, req.user.isAdmin ? "admin" : "staff", "PHOTO_UPLOADED", req.params.id, null, { tempPhotoUrl: req.file.path });
   res.status(200).json({ success: true, message: "Photo uploaded for preview.", photoUrl: req.file.path });
 });
-
 
 // Save/Update Info: PUT /api/clients/:id
 app.put("/api/clients/:id", authMiddleware, adminAuth, async (req, res) => {
@@ -450,7 +401,6 @@ app.put("/api/clients/:id", authMiddleware, adminAuth, async (req, res) => {
     if (!client) {
       return res.status(404).json({ success: false, message: "Client not found." });
     }
-    // Corrected logic to use Object.assign for partial updates
     Object.assign(client.adminData, adminData);
     client.adminData.photoUrl = photoUrl;
     client.status = "Processed";
@@ -469,7 +419,6 @@ app.put("/api/clients/:id", authMiddleware, adminAuth, async (req, res) => {
   }
 });
 
-
 // Create vCard: POST /api/clients/:id/vcard
 app.post("/api/clients/:id/vcard", authMiddleware, adminAuth, async (req, res) => {
   try {
@@ -477,11 +426,9 @@ app.post("/api/clients/:id/vcard", authMiddleware, adminAuth, async (req, res) =
     if (!client) return res.status(404).json({ success: false, message: "Client not found." });
     if (client.status !== "Processed") return res.status(400).json({ success: false, message: "vCard can only be created for clients with 'Processed' status." });
 
-
     const finalVcardUrl = `${APP_BASE_URL}/${client.submissionData.slug}`;
     const fallbackVcardUrl = `${APP_FALLBACK_URL}/vcard/${client._id}`;
     const qrCodeUrl = await QRCode.toDataURL(fallbackVcardUrl);
-
 
     client.vcardUrl = finalVcardUrl;
     client.qrCodeUrl = qrCodeUrl;
@@ -493,10 +440,8 @@ app.post("/api/clients/:id/vcard", authMiddleware, adminAuth, async (req, res) =
     });
     await client.save();
 
-
     await logAction(req.user.email, "admin", "VCARD_CREATED", client._id, "vCard generated and status set to Active.");
     const emailStatus = await sendVCardEmail(client);
-
 
     if (emailStatus.success) {
       res.status(200).json({
@@ -520,7 +465,6 @@ app.post("/api/clients/:id/vcard", authMiddleware, adminAuth, async (req, res) =
   }
 });
 
-
 // View Client PDF: GET /api/clients/:id/pdf
 app.get("/api/clients/:id/pdf", authMiddleware, adminAuth, async (req, res) => {
   const release = await pdfSemaphore.acquire();
@@ -528,15 +472,12 @@ app.get("/api/clients/:id/pdf", authMiddleware, adminAuth, async (req, res) => {
     const client = await Client.findById(req.params.id);
     if (!client) return res.status(404).json({ success: false, message: "Client not found." });
 
-
     const doc = new PDFDocument();
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=client-${client.submissionData.slug}-submission.pdf`);
     doc.pipe(res);
-    // CRITICAL: Use submissionData for immutable snapshot
     generatePdfContent(doc, client);
     doc.end();
-
 
     await logAction(req.user.email, "admin", "PDF_VIEWED", client._id);
   } catch (error) {
@@ -546,7 +487,6 @@ app.get("/api/clients/:id/pdf", authMiddleware, adminAuth, async (req, res) => {
     release();
   }
 });
-
 
 // Status change routes (Disable/Reactivate/Delete)
 app.put("/api/clients/:id/status/:newStatus", authMiddleware, adminAuth, async (req, res) => {
@@ -560,11 +500,9 @@ app.put("/api/clients/:id/status/:newStatus", authMiddleware, adminAuth, async (
     return res.status(400).json({ success: false, message: "Notes are required and must be at least 5 characters long." });
   }
 
-
   try {
     const client = await Client.findById(req.params.id);
     if (!client) return res.status(404).json({ success: false, message: "Client not found." });
-
 
     client.status = newStatus;
     client.history.push({
@@ -575,7 +513,6 @@ app.put("/api/clients/:id/status/:newStatus", authMiddleware, adminAuth, async (
     await client.save();
     await logAction(req.user.email, "admin", "STATUS_CHANGED", client._id, notes, { newStatus });
 
-
     res.status(200).json({ success: true, message: `Client status updated to ${newStatus}.`, client });
   } catch (error) {
     console.error("❌ Error updating client status:", error);
@@ -583,12 +520,10 @@ app.put("/api/clients/:id/status/:newStatus", authMiddleware, adminAuth, async (
   }
 });
 
-
 // Excel Export: GET /api/clients/export
 app.get("/api/clients/export", authMiddleware, adminAuth, async (req, res) => {
   try {
     const clients = await Client.find({});
-    // Added 'updatedAt' to the export fields
     const fields = [
       "_id",
       "submissionData.fullName",
@@ -613,7 +548,6 @@ app.get("/api/clients/export", authMiddleware, adminAuth, async (req, res) => {
   }
 });
 
-
 // Log Viewer: GET /api/logs
 app.get("/api/logs", authMiddleware, adminAuth, async (req, res) => {
   try {
@@ -625,7 +559,6 @@ app.get("/api/logs", authMiddleware, adminAuth, async (req, res) => {
   }
 });
 
-
 // Public vCard Access (fallback route): GET /vcard/:id
 app.get("/vcard/:id", async (req, res) => {
   try {
@@ -635,8 +568,6 @@ app.get("/vcard/:id", async (req, res) => {
     }
     const data = client.adminData.photoUrl ? client.adminData : client.submissionData;
 
-
-    // Enhanced HTML template for better styling
     const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -686,7 +617,6 @@ app.get("/vcard/:id", async (req, res) => {
   }
 });
 
-
 // Login routes
 app.post("/api/admin/login", loginLimiter, async (req, res) => {
   const { password } = req.body;
@@ -708,7 +638,6 @@ app.post("/api/admin/login", loginLimiter, async (req, res) => {
   }
 });
 
-
 app.post("/api/staff/login", loginLimiter, async (req, res) => {
   const { password } = req.body;
   try {
@@ -729,11 +658,9 @@ app.post("/api/staff/login", loginLimiter, async (req, res) => {
   }
 });
 
-
 // Start server
 app.listen(PORT, HOST, () => {
   console.log(`🚀 SmartCardLink App running at http://${HOST}:${PORT}`);
 });
-
 
 module.exports = app;
