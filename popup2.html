@@ -181,21 +181,24 @@
 
     // Correct Back button handler
     function goBack() {
-      window.location.href = '../popup1/popup1.html';
+      // CORRECTED: Points directly to index.html at the root
+      window.location.href = 'index.html'; 
     }
 
     // Working Hours Dropdown Toggle
     const workingHoursBtn = document.getElementById('working-hours-btn');
     const workingHoursTable = document.getElementById('working-hours-table');
-    workingHoursBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      workingHoursTable.style.display = workingHoursTable.style.display === 'none' ? 'table' : 'none';
-    });
-    document.addEventListener('click', (e) => {
-      if (!workingHoursBtn.contains(e.target) && !workingHoursTable.contains(e.target)) {
-        workingHoursTable.style.display = 'none';
-      }
-    });
+    if (workingHoursBtn && workingHoursTable) { // Ensure elements exist
+      workingHoursBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        workingHoursTable.style.display = workingHoursTable.style.display === 'none' ? 'table' : 'none';
+      });
+      document.addEventListener('click', (e) => {
+        if (!workingHoursBtn.contains(e.target) && !workingHoursTable.contains(e.target)) {
+          workingHoursTable.style.display = 'none';
+        }
+      });
+    }
   </script>
 </body>
 </html>
