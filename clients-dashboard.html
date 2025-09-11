@@ -258,7 +258,7 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script>
-        const API_BASE = 'https://server.smartcardlink.perfectparcelsstore.com/api';
+        const API_BASE = 'https://smartcardlink-app.fly.dev/api';
         const clientTableBody = document.getElementById('clientTableBody');
         const searchInput = document.getElementById('searchInput');
         const statusFilter = document.getElementById('statusFilter');
@@ -266,13 +266,19 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const noResultsMessage = document.getElementById('noResults');
         const loadingMessage = document.getElementById('loadingMessage');
-        const staffToken = localStorage.getItem('staffToken');
         let allClients = [];
 
-        // Corrected initial redirect path
-        if (!staffToken) {
-            window.location.href = 'staffLogin.html';
-        }
+        // Function to check authentication and fetch data
+        const checkAuthAndFetch = () => {
+            const staffToken = localStorage.getItem('staffToken');
+            if (!staffToken) {
+                // Redirect to login page if no token is found
+                window.location.href = 'staffLogin.html';
+                return;
+            }
+            // If token exists, fetch the client data
+            fetchClients(staffToken);
+        };
 
         const showToast = (message, type = 'info') => {
             const toast = document.createElement('div');
@@ -334,7 +340,7 @@
             renderTable(filtered);
         };
 
-        const fetchClients = async () => {
+        const fetchClients = async (staffToken) => {
             loadingMessage.style.display = 'block';
             try {
                 const response = await fetch(`${API_BASE}/clients/all`, {
@@ -361,11 +367,13 @@
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('staffToken');
             
-            // Corrected logout redirect path
+            // Redirect to login page after logout
             window.location.href = 'staffLogin.html';
         });
 
-        fetchClients();
+        // The pageshow event fires on initial load and when navigating back to the page
+        window.addEventListener('pageshow', checkAuthAndFetch);
+
     </script>
 </body>
 </html>
