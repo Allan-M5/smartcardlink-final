@@ -3,21 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartCardLink Staff Login</title>
+    <title>SmartCardLink Staff Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
+        /* The video background styling is best handled with traditional CSS */
         body {
             font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 2rem;
-            background: none;
-            position: relative;
-            color: #e2e8f0;
-            transition: all 0.5s ease-in-out;
         }
         #bg-video {
             position: fixed;
@@ -29,165 +21,42 @@
             filter: brightness(0.4) saturate(1.2);
             object-fit: cover;
         }
-        .login-card {
-            background-color: #111;
-            border-radius: 1rem;
-            padding: 2rem;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid #333;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
-            animation: fadeIn 1s ease-in-out;
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #FFD700;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            animation: spin 1s linear infinite;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        h1.title {
-            color: #FFD700;
-            font-size: 1.75rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 2rem;
-            letter-spacing: 0.05em;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #ccc;
-            font-weight: 600;
-        }
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            border: 1px solid #555;
-            background-color: #222;
-            color: white;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-        input:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-        }
-        button {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            border: 1px solid #FFD700;
-            background-color: #1a1a1a;
-            color: #FFD700;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        button:hover {
-            background-color: #FFD700;
-            color: black;
-        }
-        .message-box {
-            background-color: #2d2d2d;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-        }
-        .message-box.error {
-            background-color: #ef4444;
-            color: white;
-        }
-        .message-box.success {
-            background-color: #22c55e;
-            color: white;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body>
+<body class="flex justify-center items-center min-h-screen p-8 text-gray-200">
     <video autoplay muted loop playsinline id="bg-video">
         <source src="https://res.cloudinary.com/dicvwaud3/video/upload/v1754439276/oyvgam7oizwizgwxaxge.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>
 
-    <div class="login-card">
-        <h1 class="title">SmartCardLink Staff Login</h1>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="password">Staff Password</label>
-                <input type="password" id="password" required />
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <div id="messageBox" class="message-box" style="display: none;"></div>
+    <div class="bg-gray-950 bg-opacity-80 rounded-2xl p-8 w-full max-w-sm border border-gray-700 shadow-xl flex flex-col items-center">
+        <h1 class="text-3xl font-bold text-center text-yellow-400 mb-8 tracking-wide">
+            SmartCardLink Staff Dashboard
+        </h1>
+        <div class="spinner mb-4"></div>
+        <p class="text-center text-lg text-gray-400">
+            Loading your dashboard...
+        </p>
     </div>
 
     <script>
-        const API_BASE = 'https://smartcardlink-app.fly.dev/api';
-        const loginForm = document.getElementById('loginForm');
-        const passwordInput = document.getElementById('password');
-        const messageBox = document.getElementById('messageBox');
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-
-        const showMessage = (message, type = 'error') => {
-            messageBox.textContent = message;
-            messageBox.className = `message-box ${type}`;
-            messageBox.style.display = 'block';
-        };
-
-        const hideMessage = () => {
-            messageBox.style.display = 'none';
-        };
-
-        const setWorking = (isWorking) => {
-            submitBtn.disabled = isWorking;
-            submitBtn.textContent = isWorking ? 'Logging in...' : 'Login';
-        };
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideMessage();
-
-            const password = passwordInput.value.trim();
-            if (!password) {
-                showMessage('Please enter your staff password.', 'error');
-                return;
-            }
-
-            setWorking(true);
-
-            try {
-                const response = await fetch(`${API_BASE}/staff/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password })
-                });
-
-                const data = await response.json().catch(() => ({}));
-
-                if (response.ok) {
-                    if (!data.token) {
-                        showMessage('Login succeeded but no token returned by server.', 'error');
-                        setWorking(false);
-                        return;
-                    }
-                    localStorage.setItem('staffToken', data.token);
-                    showMessage('Login successful! Redirecting...', 'success');
-                    setTimeout(() => window.location.href = 'clients-dashboard.html', 800);
-                } else if (response.status === 401) {
-                    showMessage(data.message || 'Invalid password. Please try again.', 'error');
-                } else {
-                    showMessage(data.message || `Server error: ${response.status}`, 'error');
-                }
-            } catch (err) {
-                showMessage(err.message || 'Network error. Check your connection.', 'error');
-            } finally {
-                setWorking(false);
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Automatically redirect the user to the dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = 'clients-dashboard.html';
+            }, 1500);
         });
     </script>
 </body>
