@@ -7,11 +7,13 @@ WORKDIR /usr/src/app
 
 # Copy the core application files and dependencies.
 COPY package*.json ./
-COPY server.js ./
-COPY public/ ./public/
 
 # Install application dependencies.
 RUN npm install --production
+
+# This is the corrected line. It copies everything from your local
+# root directory into the container's app directory.
+COPY . .
 
 # Expose the port your application listens on.
 EXPOSE 8080
