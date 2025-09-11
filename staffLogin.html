@@ -119,6 +119,7 @@
         <form id="loginForm">
             <div class="form-group">
                 <label for="password">Staff Password</label>
+                <!-- This input is for display only, the password is hardcoded in the script below -->
                 <input type="password" id="password" required />
             </div>
             <button type="submit">Login</button>
@@ -129,7 +130,6 @@
     <script>
         const API_BASE = 'https://smartcardlink-app.fly.dev/api';
         const loginForm = document.getElementById('loginForm');
-        const passwordInput = document.getElementById('password');
         const messageBox = document.getElementById('messageBox');
 
         const showMessage = (message, type) => {
@@ -145,7 +145,9 @@
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
-            const password = passwordInput.value;
+            
+            // The password is now hardcoded here as requested
+            const password = "Smartcardlink2025!";
 
             try {
                 const response = await fetch(`${API_BASE}/staff/login`, {
@@ -159,7 +161,6 @@
                 if (response.ok) {
                     localStorage.setItem('staffToken', data.token);
                     showMessage('Login successful! Redirecting...', 'success');
-                    console.log('Login successful. Received token:', data.token);
                     setTimeout(() => {
                         window.location.href = 'clients-dashboard.html';
                     }, 1500);
@@ -167,7 +168,6 @@
                     throw new Error(data.message || 'Login failed. Please check your password.');
                 }
             } catch (error) {
-                console.error('Login error:', error);
                 showMessage(error.message, 'error');
             }
         });
