@@ -202,7 +202,11 @@
                 }
                 localStorage.setItem('staffToken', data.token);
                 showToast('Login successful!', 'success');
-                window.location.href = window.location.origin + '/vcardClientDashboard.html';
+                
+                // --- CORRECTED REDIRECT ---
+                // We're using a relative path to ensure the redirect works in the sub-directory.
+                window.location.href = 'clients-dashboard.html';
+                // --- END CORRECTED REDIRECT ---
 
             } catch (error) {
                 console.error('Login error:', error);
