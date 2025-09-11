@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartCardLink - Home vCard</title>
 
-  <!-- Section CSS (reuse popup1 styles) -->
   <link rel="stylesheet" href="popup1/popup1-header.css"/>
   <link rel="stylesheet" href="popup1/popup1-profile.css"/>
   <link rel="stylesheet" href="popup1/popup1-name-business-title.css"/>
@@ -47,7 +46,7 @@
               .then(html => {
                   document.getElementById(id).innerHTML = html;
               })
-              .catch(err => console.error(err));
+              .catch(err => console.error(`Error loading ${file}:`, err)); // Improved error logging
       };
 
       loadSection('header-placeholder', 'popup1/popup1-header.html');
@@ -69,10 +68,12 @@
           if (e.target.classList.contains('more-info-btn')) {
               e.preventDefault();
               const popupContainer = document.querySelector('.popup-container');
-              popupContainer.style.transition = 'opacity 0.5s ease';
-              popupContainer.style.opacity = '0';
+              if (popupContainer) { // Ensure popupContainer exists before animating
+                popupContainer.style.transition = 'opacity 0.5s ease';
+                popupContainer.style.opacity = '0';
+              }
               setTimeout(() => {
-                  window.location.href = 'popup2/popup2.html';
+                  window.location.href = 'popup2.html'; // CORRECTED: Points to popup2.html at the root
               }, 500);
           }
       });
