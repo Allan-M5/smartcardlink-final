@@ -1,1 +1,18 @@
-fly.toml
+Ignore the node_modules folder, as it will be installed
+inside the Docker container.
+node_modules/
+
+Ignore local environment files and logs.
+.env
+.env.local
+npm-debug.log*
+
+Ignore build output and IDE configuration.
+/dist
+/build
+.vscode/
+
+Ignore Git history and temporary files.
+.git
+.gitignore
+.npmrc
