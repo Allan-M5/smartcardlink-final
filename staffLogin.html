@@ -182,8 +182,6 @@
             }, 5000);
         };
         
-        // TEMPORARY NOTE: The login password for this static page is: Smartcardlink2025!
-        
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             loginBtn.innerHTML = 'Logging in... <span class="spinner"></span>';
@@ -193,13 +191,9 @@
             const correctPassword = 'Smartcardlink2025!';
 
             if (enteredPassword === correctPassword) {
-                // This now sets the 'staffToken' that the dashboard is expecting.
                 localStorage.setItem('staffToken', 'placeholder-token-12345');
                 showToast('Login successful!', 'success');
-                
-                // This now redirects to the correct dashboard file.
                 window.location.href = 'clients-dashboard.html';
-                
             } else {
                 showToast('Invalid password. Please try again.', 'error');
                 loginBtn.innerHTML = 'Login';
