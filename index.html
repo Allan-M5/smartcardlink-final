@@ -17,16 +17,25 @@
 </head>
 <body>
   <div class="popup-container gold-border">
-    <div id="header-placeholder"></div>
-    <div id="profile-placeholder"></div>
-    <div id="name-business-title-placeholder"></div>
-    <div id="contact-placeholder"></div>
-    <div id="buttons-placeholder"></div>
-    <div id="moreinfo-placeholder"></div>
+    <!-- Main content, initially visible -->
+    <div id="popup1-container">
+      <div id="header-placeholder"></div>
+      <div id="profile-placeholder"></div>
+      <div id="name-business-title-placeholder"></div>
+      <div id="contact-placeholder"></div>
+      <div id="buttons-placeholder"></div>
+      <div id="moreinfo-placeholder"></div>
+    </div>
+
+    <!-- More info content, initially hidden -->
+    <div id="popup2-container" style="display: none;"></div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const popup1Container = document.getElementById('popup1-container');
+      const popup2Container = document.getElementById('popup2-container');
+
       const loadSection = (id, file) => {
         fetch(file)
           .then(res => {
@@ -57,7 +66,23 @@
         }
         if (e.target.classList.contains('more-info-btn')) {
           e.preventDefault();
-          window.location.href = 'popup2.html';
+          // Show Popup2 content by fetching and replacing innerHTML
+          fetch('popup2.html')
+            .then(res => res.text())
+            .then(html => {
+              popup2Container.innerHTML = html;
+              popup1Container.style.display = 'none';
+              popup2Container.style.display = 'block';
+
+              // Re-attach click listener for back button
+              const backButton = document.getElementById('back-button');
+              if (backButton) {
+                backButton.addEventListener('click', () => {
+                  popup2Container.style.display = 'none';
+                  popup1Container.style.display = 'block';
+                });
+              }
+            });
         }
       });
     });
