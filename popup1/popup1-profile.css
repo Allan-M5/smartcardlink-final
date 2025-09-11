@@ -1,40 +1,29 @@
-/*
-  This CSS is updated to apply the requested styling:
-  - The image now fills its container.
-  - A strong vignette effect is applied using a pseudo-element.
-  - The photo's edges fade to blend with the container.
-*/
-
 .profile-section {
-  /* This container defines the boundary for the profile photo. */
-  /* You can adjust these values to fit the exact size of your section. */
-  width: 100%;
-  height: 500px;
-  overflow: hidden; /* Ensures the photo and effects stay within the bounds */
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
 }
 
 .profile-photo-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .profile-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Applies a mask to make the edges of the photo fade out smoothly */
-  -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 70%, transparent 100%);
-  mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 70%, transparent 100%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.5) 75%, transparent 100%);
+    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.5) 75%, transparent 100%);
 }
 
 .profile-photo-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* Creates a strong vignette effect using a box-shadow inset */
-  box-shadow: inset 0 0 100px 50px rgba(0, 0, 0, 0.8);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 150px 75px rgba(0, 0, 0, 0.9);
 }
