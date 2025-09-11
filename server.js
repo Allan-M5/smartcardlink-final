@@ -100,6 +100,7 @@ app.use(helmet({
 app.use(morgan("combined"));
 
 
+// CORRECTED: Added the Netlify domain to the list of allowed origins.
 const allowedOrigins = [
   'https://smartcardlink.perfectparcelsstore.com',
   'https://smartcardlink.perfectparcelsstore.com/client-form',
@@ -108,6 +109,7 @@ const allowedOrigins = [
   'https://smartcardlink.perfectparcelsstore.com/admin-form',
   APP_BASE_URL,
   APP_FALLBACK_URL,
+  'https://endearing-banoffee-27fd44.netlify.app', // NEW: Your Netlify frontend domain
   'http://localhost:5000' // Temporary for local dev
 ];
 
@@ -251,14 +253,14 @@ const generatePdfContent = (doc, client) => {
     doc.moveDown();
     doc.text("Social Links:");
     for (const [key, value] of Object.entries(data.socialLinks)) {
-      if (value) doc.text(`    - ${key}: ${value}`);
+      if (value) doc.text(`     - ${key}: ${value}`);
     }
   }
   if (data.workingHours && typeof data.workingHours === "object") {
     doc.moveDown();
     doc.text("Working Hours:");
     for (const [key, value] of Object.entries(data.workingHours)) {
-      if (value) doc.text(`    - ${key}: ${value}`);
+      if (value) doc.text(`     - ${key}: ${value}`);
     }
   }
 };
