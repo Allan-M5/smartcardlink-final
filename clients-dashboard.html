@@ -268,15 +268,12 @@
         const loadingMessage = document.getElementById('loadingMessage');
         let allClients = [];
 
-        // Function to check authentication and fetch data
         const checkAuthAndFetch = () => {
             const staffToken = localStorage.getItem('staffToken');
             if (!staffToken) {
-                // Redirect to login page if no token is found
                 window.location.href = 'staffLogin.html';
                 return;
             }
-            // If token exists, fetch the client data
             fetchClients(staffToken);
         };
 
@@ -285,11 +282,9 @@
             toast.className = `toast ${type}`;
             toast.innerText = message;
             document.getElementById('toast-container').appendChild(toast);
-
             setTimeout(() => {
                 toast.classList.add('show');
             }, 10);
-
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.addEventListener('transitionend', () => toast.remove());
@@ -329,9 +324,9 @@
 
             const filtered = allClients.filter(client => {
                 const matchesSearch = searchTerm === '' || 
-                    client.fullName.toLowerCase().includes(searchTerm) ||
-                    client.email1.toLowerCase().includes(searchTerm) ||
-                    client.phone1.toLowerCase().includes(searchTerm);
+                    (client.fullName && client.fullName.toLowerCase().includes(searchTerm)) ||
+                    (client.email1 && client.email1.toLowerCase().includes(searchTerm)) ||
+                    (client.phone1 && client.phone1.toLowerCase().includes(searchTerm));
                 
                 const matchesStatus = selectedStatus === '' || client.status === selectedStatus;
                 
@@ -343,20 +338,21 @@
         const fetchClients = async (staffToken) => {
             loadingMessage.style.display = 'block';
             try {
-                // Log the token to confirm it's being sent correctly
-                console.log('Sending request with token:', staffToken);
                 const response = await fetch(`${API_BASE}/clients/all`, {
                     headers: { 'Authorization': `Bearer ${staffToken}` }
                 });
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Failed to fetch clients.');
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to fetch clients.');
+                }
                 
                 allClients = data;
                 filterClients();
                 showToast('Client data loaded successfully!', 'success');
             } catch (error) {
                 console.error('Fetch error:', error);
-                showToast(error.message, 'error');
+                showToast(`Fetch error: ${error.message}`, 'error');
                 noResultsMessage.style.display = 'block';
             } finally {
                 loadingMessage.style.display = 'none';
@@ -368,12 +364,9 @@
         searchBtn.addEventListener('click', filterClients);
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('staffToken');
-            
-            // Redirect to login page after logout
             window.location.href = 'staffLogin.html';
         });
 
-        // The pageshow event fires on initial load and when navigating back to the page
         window.addEventListener('pageshow', checkAuthAndFetch);
 
     </script>
